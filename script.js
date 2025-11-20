@@ -1,5 +1,5 @@
 // ===========================
-// Smooth Scroll & Section Navigation
+// Section Navigation
 // ===========================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
         sections[currentSection].classList.add('active');
         navDots[currentSection].classList.add('active');
 
-        // Scroll to section
+        // Scroll to section with smooth animation
         sections[currentSection].scrollIntoView({
             behavior: 'smooth',
             block: 'start'
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Reset scrolling flag
         setTimeout(() => {
             isScrolling = false;
-        }, 1000);
+        }, 800);
     }
 
     // Scroll indicator click
@@ -148,75 +148,14 @@ function animateSkillCircles() {
 
     circles.forEach(circle => {
         const percent = parseInt(circle.getAttribute('data-percent'));
-        const circumference = 2 * Math.PI * 80; // radius = 80
+        const radius = 64; // Updated radius for smaller circles
+        const circumference = 2 * Math.PI * radius;
         const offset = circumference - (percent / 100) * circumference;
 
-        setTimeout(() => {
-            circle.style.strokeDashoffset = offset;
-        }, 100);
+        // Update circle instantly (no animation delay)
+        circle.style.strokeDashoffset = offset;
     });
 }
-
-// ===========================
-// Smooth Hover Effects
-// ===========================
-
-// Gallery items hover effect
-const galleryItems = document.querySelectorAll('.gallery-item');
-galleryItems.forEach(item => {
-    item.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-10px) scale(1.05)';
-    });
-
-    item.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0) scale(1)';
-    });
-});
-
-// Project cards hover effect
-const projectCards = document.querySelectorAll('.project-card');
-projectCards.forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-15px)';
-    });
-
-    card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0)';
-    });
-});
-
-// ===========================
-// Dynamic Text Animation
-// ===========================
-
-function typeWriter(element, text, speed = 50) {
-    let i = 0;
-    element.textContent = '';
-
-    function type() {
-        if (i < text.length) {
-            element.textContent += text.charAt(i);
-            i++;
-            setTimeout(type, speed);
-        }
-    }
-
-    type();
-}
-
-// ===========================
-// Parallax Effect
-// ===========================
-
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const parallaxElements = document.querySelectorAll('.hero::before, .projects-timeline::before');
-
-    parallaxElements.forEach(element => {
-        const speed = 0.5;
-        element.style.transform = `translateY(${scrolled * speed}px)`;
-    });
-});
 
 // ===========================
 // Navigation Dot Active State on Scroll
@@ -246,83 +185,6 @@ window.addEventListener('scroll', () => {
 });
 
 // ===========================
-// Preload Images (if any added later)
-// ===========================
-
-function preloadImages() {
-    const images = document.querySelectorAll('img[data-src]');
-
-    images.forEach(img => {
-        const src = img.getAttribute('data-src');
-        if (src) {
-            img.src = src;
-            img.removeAttribute('data-src');
-        }
-    });
-}
-
-// Call preload when page is loaded
-window.addEventListener('load', preloadImages);
-
-// ===========================
-// Form Validation (if contact form added)
-// ===========================
-
-function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
-
-// ===========================
-// Scroll Progress Indicator
-// ===========================
-
-function updateScrollProgress() {
-    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrolled = (winScroll / height) * 100;
-
-    // Can be used to show a progress bar if needed
-    return scrolled;
-}
-
-window.addEventListener('scroll', updateScrollProgress);
-
-// ===========================
-// Lazy Loading Effect
-// ===========================
-
-const lazyLoadObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('fade-in');
-            lazyLoadObserver.unobserve(entry.target);
-        }
-    });
-});
-
-// Observe elements for lazy loading
-document.querySelectorAll('.timeline-item, .gallery-item, .project-card, .testimonial-item').forEach(el => {
-    lazyLoadObserver.observe(el);
-});
-
-// ===========================
-// Mobile Menu Toggle (if needed later)
-// ===========================
-
-function toggleMobileMenu() {
-    const navDots = document.querySelector('.nav-dots');
-    if (window.innerWidth <= 768) {
-        navDots.style.display = 'none';
-    } else {
-        navDots.style.display = 'flex';
-    }
-}
-
-window.addEventListener('resize', toggleMobileMenu);
-toggleMobileMenu();
-
-// ===========================
 // Smooth Anchor Links
 // ===========================
 
@@ -341,34 +203,24 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 // ===========================
-// Performance: Debounce Function
+// Mobile Menu Toggle
 // ===========================
 
-function debounce(func, wait = 20, immediate = true) {
-    let timeout;
-    return function() {
-        const context = this, args = arguments;
-        const later = function() {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
-        };
-        const callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-    };
+function toggleMobileMenu() {
+    const navDots = document.querySelector('.nav-dots');
+    if (window.innerWidth <= 768) {
+        navDots.style.display = 'none';
+    } else {
+        navDots.style.display = 'flex';
+    }
 }
 
-// Use debounce for scroll events
-const efficientScroll = debounce(function() {
-    updateScrollProgress();
-});
-
-window.addEventListener('scroll', efficientScroll);
+window.addEventListener('resize', toggleMobileMenu);
+toggleMobileMenu();
 
 // ===========================
 // Console Message
 // ===========================
 
-console.log('%c Portfolio Hasiniavo Ramanatseheno ', 'background: #2b2b2b; color: #f5f5f0; font-size: 20px; padding: 10px;');
-console.log('%c Business Analyst IT Salesforce ', 'background: #d4a574; color: #2b2b2b; font-size: 16px; padding: 5px;');
+console.log('%c Portfolio Hasiniavo Ramanatseheno ', 'background: #000000; color: #F5F0E8; font-size: 18px; padding: 8px;');
+console.log('%c Business Analyst IT Salesforce ', 'background: #D4C5B0; color: #000000; font-size: 14px; padding: 4px;');
